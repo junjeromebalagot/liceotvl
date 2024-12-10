@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LICEO ROBOTICS LABORATORY RESERVATION</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f9e0a1; /* Lighter gold close to white */
+      margin: 0;
+      padding: 0;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: #8b0000; /* Dark Red */
+      color: #fff;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    header .logo {
+      font-size: 24px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    header nav {
+      display: flex;
+      gap: 15px;
+    }
+
+    header nav a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 16px;
+      transition: color 0.3s ease;
+    }
+
+    header nav a:hover {
+      color: #ffc107; /* Gold */
+    }
+
+    h1 {
+      text-align: center;
+      color: #8b0000; /* Dark Red */
+      margin-top: 20px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .form, .display {
+      flex: 1;
+      min-width: 300px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      border: 1px solid #ddd; /* Light gray border */
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 8px;
+      color: #333; /* Neutral label color */
+    }
+
+    .input-group input, .input-group select, .input-group button {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc; /* Neutral border */
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    .input-group input:focus, .input-group select:focus, .input-group button:focus {
+      outline: none;
+      border-color: #8b0000; /* Dark red for focus */
+      box-shadow: 0 0 5px rgba(139, 0, 0, 0.5); /* Subtle dark red shadow */
+    }
+
+    .input-group button {
+      background-color: #8b0000; /* Dark Red */
+      color: #fff; /* White text */
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .input-group button:hover {
+      background-color: #a31212; /* Slightly lighter dark red */
+    }
+
+    .display h3 {
+      margin-top: 0;
+      color: #8b0000; /* Dark Red heading */
+    }
+
+    .booked-slot {
+      background-color: #fff4e1; /* Very light gold */
+      border: 1px solid #ffc107; /* Gold border */
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    .booked-slot.full {
+      background-color: #f7d7d7; /* Soft pinkish-red */
+      border-color: #8b0000; /* Dark red for full bookings */
+    }
+
+    .display p {
+      color: #333;
+      font-size: 18px;
+    }
+
+    /* Notifications */
+    .notification {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #8b0000;
+      color: white;
+      padding: 15px;
+      font-size: 18px;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 80%;
+      text-align: center;
+      z-index: 1000;
+      display: none; /* Initially hidden */
+    }
+
+    .notification-close {
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      cursor: pointer;
+      font-size: 20px;
+      font-weight: bold;
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      header nav {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .container {
+        flex-direction: column;
+      }
+
+      .form, .display {
+        margin-bottom: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">Liceo Robotics Lab</div>
+    <nav>
+      <a href="#" id="aboutBtn">About</a>
+      <a href="#" id="contactBtn">Contact</a>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <h1>Laboratory Reservation</h1>
+  <div class="container">
+    <!-- Booking Form -->
+    <div class="form">
+      <div class="input-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" placeholder="Enter your name" required>
+      </div>
+      <div class="input-group">
+        <label for="section">Section</label>
+        <input type="text" id="section" placeholder="Enter section to handle" required>
+      </div>
+      <div class="input-group">
+        <label for="sectionDropdown">Choose Section</label>
+        <select id="sectionDropdown">
+          <option value="WAC 212">WAC 212</option>
+          <option value="WAC 213">WAC 213</option>
+          <option value="EAC 505">EAC 505</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label for="date">Date</label>
+        <input type="date" id="date" required>
+      </div>
+      <div class="input-group">
+        <button id="bookBtn">Book Now</button>
+      </div>
+    </div>
+
+    <!-- Display Bookings -->
+    <div class="display">
+      <h3>Booked Slots</h3>
+      <div id="bookedSlots"></div>
+    </div>
+  </div>
+
+  <!-- Notification: About -->
+  <div id="aboutNotification" class="notification">
+    <span class="notification-close" onclick="closeNotification('aboutNotification')">×</span>
+    This is just a test booking website, XDXD
+  </div>
+
+  <!-- Notification: Contact -->
+  <div id="contactNotification" class="notification">
+    <span class="notification-close" onclick="closeNotification('contactNotification')">×</span>
+    Please contact Sir Jun Jerome C. Balagot for further concerns.
+  </div>
+
+  <script>
+    const bookedSlotsDiv = document.getElementById("bookedSlots");
+
+    // Function to update booked slots display
+    // Function to update booked slots display
+    function updateBookedSlots() {
+      bookedSlotsDiv.innerHTML = ""; // Clear the display
+      for (const date in bookedData) {
+        const slots = bookedData[date];
+        const slotDiv = document.createElement("div");
+        slotDiv.className = `booked-slot ${slots.length >= 2 ? "full" : ""}`;
+        slotDiv.innerHTML = `
+          <strong>Date: ${date}</strong>
+          <ul>
+            ${slots
+              .map(
+                (slot, index) =>
+                  `<li>
+                    ${index === 0 ? "8:00AM-12:00PM" : "1:00PM-5:00PM"}: 
+                    ${slot.name} (${slot.section}, ${slot.dropdown}) 
+                    <button class="remove-btn" data-date="${date}" data-index="${index}">Remove</button>
+                  </li>`
+              )
+              .join("")}
+          </ul>
+        `;
+        bookedSlotsDiv.appendChild(slotDiv);
+      }
+
+      // Add event listeners to remove buttons
+      document.querySelectorAll(".remove-btn").forEach(button => {
+        button.addEventListener("click", (event) => {
+          const date = event.target.getAttribute("data-date");
+          const index = event.target.getAttribute("data-index");
+
+          removeBooking(date, index);
+        });
+      });
+    }
+
+    // Function to remove a specific booking
+    // Function to remove a specific booking
+    function removeBooking(date, index) {
+      // Get the current booked data from localStorage
+      const bookedData = loadBookings();
+
+      // Remove the booking from the specified date and index
+      if (bookedData[date]) {
+        bookedData[date].splice(index, 1);
+        
+        // If no slots are left for the date, remove the date entry
+        if (bookedData[date].length === 0) {
+          delete bookedData[date];
+        }
+
+        // Save the updated data back to localStorage
+        localStorage.setItem("bookedData", JSON.stringify(bookedData));
+
+        // Update the display with the new list of bookings
+        updateBookedSlots();
+
+        // Show a confirmation message
+        alert("Booking has been removed!");
+
+        // Reload the page to refresh content
+        window.location.reload();
+      }
+    }
+
+    // Function to load data from localStorage
+    function loadBookings() {
+      const savedData = localStorage.getItem("bookedData");
+      if (savedData) {
+        const parsedData = JSON.parse(savedData);
+        // Remove expired bookings
+        const currentDate = new Date();
+        for (const date in parsedData) {
+          parsedData[date] = parsedData[date].filter(booking => {
+            const bookingDate = new Date(booking.timestamp);
+            const timeDifference = currentDate - bookingDate;
+            const twoMonths = 60 * 24 * 60 * 60 * 1000; // 2 months in milliseconds
+            return timeDifference < twoMonths;
+          });
+        }
+        // Remove empty date entries
+        for (const date in parsedData) {
+          if (parsedData[date].length === 0) {
+            delete parsedData[date];
+          }
+        }
+        localStorage.setItem("bookedData", JSON.stringify(parsedData));
+        return parsedData;
+      }
+      return {};
+    }
+
+    // Handle Booking
+    document.getElementById("bookBtn").addEventListener("click", (event) => {
+      event.preventDefault(); // Prevent the default behavior (page refresh)
+
+      const name = document.getElementById("name").value.trim();
+      const section = document.getElementById("section").value.trim();
+      const dropdown = document.getElementById("sectionDropdown").value;
+      const date = document.getElementById("date").value;
+
+      if (!name || !section || !date || !dropdown) {
+        alert("Please fill in all fields!");
+        return;
+      }
+
+      // Get current bookings
+      const bookedData = loadBookings();
+
+      // Check if date is already booked
+      if (!bookedData[date]) {
+        bookedData[date] = [];
+      }
+
+      if (bookedData[date].length >= 2) {
+        alert("This date is fully booked!");
+        return;
+      }
+
+      // Add booking
+      bookedData[date].push({ name, section, dropdown, timestamp: new Date().toISOString() });
+      localStorage.setItem("bookedData", JSON.stringify(bookedData));
+
+      // Update the display with new bookings
+      updateBookedSlots();
+
+      // Clear input fields
+      document.getElementById("name").value = "";
+      document.getElementById("section").value = "";
+      document.getElementById("date").value = "";
+      document.getElementById("sectionDropdown").value = "WAC 212";
+
+      alert("Booking successful!");
+
+      // Reload the page to refresh all content
+      window.location.reload();
+    });
+
+
+    // Close notification function
+    function closeNotification(notificationId) {
+      document.getElementById(notificationId).style.display = 'none';
+    }
+
+    // Show the About notification when About button is clicked
+    document.getElementById("aboutBtn").addEventListener("click", () => {
+      document.getElementById("aboutNotification").style.display = 'block';
+    });
+
+    // Show the Contact notification when Contact button is clicked
+    document.getElementById("contactBtn").addEventListener("click", () => {
+      document.getElementById("contactNotification").style.display = 'block';
+    });
+
+    // Initial load of bookings
+    const bookedData = loadBookings();
+    updateBookedSlots();
+
+  </script>
+</body>
+</html>
