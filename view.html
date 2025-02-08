@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booked Dates</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f9e0a1;
+      margin: 0;
+      padding: 0;
+      color: #333;
+      text-align: center;
+    }
+
+    header {
+      background-color: #8b0000;
+      color: #fff;
+      padding: 15px;
+      font-size: 24px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #8b0000;
+      color: white;
+    }
+
+    .back-button {
+      background-color: #8b0000;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 20px;
+    }
+
+    .back-button:hover {
+      background-color: #a31212;
+    }
+  </style>
+</head>
+<body>
+
+  <header>Booked Dates</header>
+
+  <div class="container">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Section</th>
+          <th>Room</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody id="bookedData">
+        <tr><td colspan="4">Loading...</td></tr>
+      </tbody>
+    </table>
+
+    <button class="back-button" onclick="window.location.href='index.html'">Back</button>
+  </div>
+
+  <script>
+    const sheetURL = 'https://script.google.com/macros/s/AKfycbwPbZ8I6NCGHVrzi3wn5LpPaO3S12dumdx6besIxnfigQel3oh4ApDt9tpp_FUy7A4ZLQ/exec'; // Replace with your Google Apps Script URL
+
+    // In your view.html's script section
+    async function fetchBookings() {
+        try {
+          const response = await fetch(sheetURL);
+          const data = await response.json();
+
+          const tableBody = document.getElementById("bookedData");
+          tableBody.innerHTML = "";
+
+          if (!data.length) {
+            tableBody.innerHTML = "<tr><td colspan='4'>No bookings found</td></tr>";
+            return;
+          }
+
+          // Create valid entries
+          const validEntries = data.filter(row => {
+            const [name, section, room, rawDate] = row;
+            return name && section && room && rawDate && !isNaN(new Date(rawDate).getTime());
+          });
+
+          if (!validEntries.length) {
+            tableBody.innerHTML = "<tr><td colspan='4'>No valid bookings found</td></tr>";
+            return;
+          }
+
+          // Display entries
+          validEntries.forEach(row => {
+            const [name, section, room, rawDate] = row;
+            const date = new Date(rawDate);
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            
+            const rowHTML = `
+              <tr>
+                <td>${name || 'N/A'}</td>
+                <td>${section || 'N/A'}</td>
+                <td>${room || 'N/A'}</td>
+                <td>${date.toLocaleDateString('en-US', options)}</td>
+              </tr>`;
+              
+            tableBody.innerHTML += rowHTML;
+          });
+
+        } catch (error) {
+          console.error("Error:", error);
+          document.getElementById("bookedData").innerHTML = 
+            "<tr><td colspan='4'>Error loading data. Please refresh.</td></tr>";
+        }
+      }
+
+    // 📌 Function to format the date as "Month Day, Year"
+    function formatDate(isoString) {
+      if (!isoString) return "Invalid Date"; // Handle empty values
+      const date = new Date(isoString);
+      const options = { year: "numeric", month: "long", day: "numeric" };
+      return date.toLocaleDateString("en-US", options); // Output: "February 8, 2025"
+    }
+
+    // Call function when page loads
+    fetchBookings();
+
+  </script>
+
+</body>
+</html>
